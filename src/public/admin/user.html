@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/tokens.css" />
+    <link rel="stylesheet" href="/css/utilities.css" />
+    <link rel="stylesheet" href="/css/app.css" />
+    <title>Document</title>
+  </head>
+  <body onload="getUser()">
+    <main>
+      <section id="view"></section>
+    </main>
+
+    <script>
+      async function getUser() {
+        const view = document.getElementById("view");
+
+        const userId = location.search.split("user=")[1];
+
+        try {
+          const req = await fetch(
+            "http://localhost:3030/api/users" + `/${userId}`
+          );
+          const user = await req.json();
+
+          const wrapper = document.createElement("div");
+          wrapper.classList.add("py-5");
+
+          const card = `
+          <img src="/images/${
+            user.profile_picture
+          }" class="mx-auto avatar avatar-big d-block mb-4" alt="avatar" />
+      <button
+      id="checkbtn"
+      onclick="check(${user.id}, ${user.checked_in})"
+        class="w-100 btn p-3 d-flex align-items-center justify-content-center mb-5 ${
+          user.checked_in === 0 ? "bg-success" : "bg-danger"
+        }"
+      >
+      <b class="fw-bold me-4">${
+        user.checked_in === 0 ? "Check-Out" : "Check-In"
+      }</b>
+        <div id="check-icon" class="${
+          user.checked_in === 0 ? "checked_in" : "checked_out"
+        }"></div>
+      </button>
+      <h3 class="mb-4 mx-0 fs-2">Child</h3>
+      <div class="d-flex align-items-center flex-nowrap flex-wrap w-100 mb-4">
+        <div style="min-width: 100px">
+          <p
+            style="font-size: 16px"
+            class="chikios-paragraph me-3 flex-shrink-0 text-left"
+          >
+            First name:
+          </p>
+        </div>
+        <div class="w-100">
+          <input
+            type="text"
+            placeholder="Enter first name"
+            class="form_input p-3 bg-info-subtle rounded-3 w-100"
+            id="fn"
+            value="${user.first_name}"
+            readonly
+          />
+        </div>
+      </div>
+
+      <div class="d-flex align-items-center flex-nowrap flex-wrap w-100 mb-4">
+        <div style="min-width: 100px">
+          <p
+            style="font-size: 16px"
+            class="chikios-paragraph me-3 flex-shrink-0 text-left"
+          >
+            Last name:
+          </p>
+        </div>
+        <div class="w-100">
+          <input
+            type="text"
+            placeholder="Enter first name"
+            class="form_input p-3 bg-info-subtle rounded-3 w-100"
+            id="fn"
+                 value="${user.last_name}"
+            readonly
+          />
+        </div>
+      </div>
+      <div class="d-flex align-items-center flex-nowrap flex-wrap w-100 mb-4">
+        <div style="min-width: 100px">
+          <p
+            style="font-size: 16px"
+            class="chikios-paragraph me-3 flex-shrink-0 text-left"
+          >
+            Age:
+          </p>
+        </div>
+        <div class="w-100">
+          <input
+            type="number"
+            placeholder="0"
+            class="form_input-number p-3 rounded-3"
+            id="age"
+            max="11"
+            min="4"
+            value="${user.age}"
+            readonly
+          />
+        </div>
+      </div>
+      <div class="d-flex align-items-center flex-nowrap flex-wrap w-100 mb-4">
+        <div style="min-width: 100px">
+          <p
+            style="font-size: 16px"
+            class="chikios-paragraph my-0 me-3 flex-shrink-0 text-left"
+          >
+            Gender:
+          </p>
+        </div>
+        <div class="w-100 d-flex align-items-center justify-content-start">
+          <button
+            id="${user.gender === 1 ? "malebtn" : "femalebtn"}"
+            class="rounded-2 me-3 btn active"
+          >
+            M
+          </button>
+        </div>
+      </div>
+
+      <h3 class="mb-4 mx-0 fs-2">Guardian</h3>
+     <div class="d-flex align-items-center flex-nowrap flex-wrap w-100 mb-4">
+        <div style="min-width: 100px">
+          <p
+            style="font-size: 16px"
+            class="chikios-paragraph me-3 flex-shrink-0 text-left"
+          >
+            First name:
+          </p>
+        </div>
+        <div class="w-100">
+          <input
+            type="text"
+            placeholder="Enter first name"
+            class="form_input p-3 bg-info-subtle rounded-3 w-100"
+            id="fn"
+            value="${user.guardian.first_name}"
+            readonly
+          />
+        </div>
+      </div>
+      <div class="d-flex align-items-center flex-nowrap flex-wrap w-100 mb-4">
+        <div style="min-width: 100px">
+          <p
+            style="font-size: 16px"
+            class="chikios-paragraph me-3 flex-shrink-0 text-left"
+          >
+            Last name:
+          </p>
+        </div>
+        <div class="w-100">
+          <input
+            type="text"
+            placeholder="Enter first name"
+            class="form_input p-3 bg-info-subtle rounded-3 w-100"
+            id="fn"
+            value="${user.guardian.last_name}"
+            readonly
+          />
+        </div>
+      </div>
+     <div class="d-flex align-items-center flex-nowrap flex-wrap w-100 mb-4">
+        <div style="min-width: 100px">
+            <p s="" class="chikios-paragraph me-3 flex-shrink-0 text-left">
+                Phone #:
+            </p>
+        </div>
+            <div class="w-100">
+            <input type="text" placeholder="Enter phone number" class="form_input p-3 rounded-3 w-100" id="gphone" readonly value="${
+              user.guardian.phone_number
+            }">
+        </div>
+     </div>
+         `;
+          wrapper.innerHTML = card;
+          view.appendChild(wrapper);
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    </script>
+
+    <script>
+      async function check(id, status) {
+        const userId = document.getElementById("checkbtn");
+        const textContent = document.querySelector("#checkbtn b");
+        const checkIcon = document.querySelector("#check-icon");
+
+        try {
+          const req = await fetch(
+            `http://localhost:3030/api/users/${
+              status === 0 ? "checkin" : "checkout"
+            }/${id}`,
+            {
+              method: "PUT",
+            }
+          );
+          const res = await req.json();
+
+          if (res.status === 200 && status === 0) {
+            userId.classList.remove("bg-success");
+            userId.classList.add("bg-danger");
+            textContent.textContent = "Check-In";
+            checkIcon.classList.remove("checked_in");
+            checkIcon.classList.add("checked_out");
+            userId.setAttribute("onclick", `check(${id}, 1)`);
+          } else if (res.status === 200 && status === 1) {
+            userId.classList.remove("checked_in", "bg-danger");
+            userId.classList.add("bg-success");
+            textContent.textContent = "Check-Out";
+            checkIcon.classList.remove("checked_out");
+            checkIcon.classList.add("checked_in");
+            userId.setAttribute("onclick", `check(${id}, 0)`);
+          }
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    </script>
+  </body>
+</html>

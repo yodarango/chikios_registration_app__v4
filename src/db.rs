@@ -26,19 +26,20 @@ pub mod queries {
                 };
                 
                 let users = " 
-                SELECT r.id, r.first_name, r.last_name, r.gender, r.age, g.first_name AS guardian_fn, g.last_name AS guardian_ln, g.phone_number AS guardian_phone, profile_picture
+                SELECT r.id, r.first_name, r.last_name, r.gender, r.age, g.first_name AS guardian_fn, g.last_name AS guardian_ln, g.phone_number AS guardian_phone, r.profile_picture, r.checked_in
                 FROM registrant AS r
                 JOIN guardians AS g
                 ON r.id = g.registrant_id 
                 WHERE r.id > ? 
                 LIMIT 20"
                 .with((from_id,))
-                .map(&mut conn, |(id, first_name, last_name, gender, age, guardian_fn, guardian_ln, guardian_phone , profile_picture)| 
+                .map(&mut conn, |(id, first_name, last_name, gender, age, guardian_fn, guardian_ln, guardian_phone , profile_picture, checked_in)| 
                     Registrant { 
                         profile_picture,
                         created_date: None,
                         first_name, 
                         last_name, 
+                        checked_in,
                         gender, 
                         age, 
                         id, 
@@ -57,6 +58,8 @@ pub mod queries {
 
                 drop(conn);
 
+                println!("{:?}", users);
+
                 //pool.disconnect().await?;
 
                 Ok(users)
@@ -66,7 +69,7 @@ pub mod queries {
             let mut conn = pool.get_conn().await?; // ? is the same as match Ok(conn) => conn, Err(e) => return Err(e)
              
              let query = 
-              "SELECT r.id, r.first_name, r.last_name, r.gender, r.age, g.first_name AS guardian_fn, g.last_name AS guardian_ln, g.phone_number AS guardian_phone, profile_picture
+              "SELECT r.id, r.first_name, r.last_name, r.gender, r.age, g.first_name AS guardian_fn, g.last_name AS guardian_ln, g.phone_number AS guardian_phone, r.profile_picture, r.checked_in
                 FROM registrant AS r
                 JOIN guardians AS g
                 ON r.id = g.registrant_id 
@@ -74,10 +77,11 @@ pub mod queries {
             
             //query
             let user: Vec<Registrant>= query
-            .map(&mut conn, |(id, first_name, last_name, gender, age, guardian_fn, guardian_ln, guardian_phone, profile_picture )| 
+            .map(&mut conn, |(id, first_name, last_name, gender, age, guardian_fn, guardian_ln, guardian_phone, profile_picture, checked_in )| 
             Registrant { 
                 profile_picture,
                 created_date: None,
+                checked_in,
                 first_name, 
                 last_name, 
                 gender, 
@@ -108,6 +112,7 @@ pub mod queries {
                         last_name: "none".into(),
                         created_date: None,
                         guardian: None,
+                        checked_in: 0,
                         gender: 0,
                         age: 0,
                     },

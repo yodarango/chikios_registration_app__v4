@@ -87,6 +87,11 @@ pub mod server {
         .and(warp::get())
         .and(warp::fs::dir("src/public/styles/"));
 
+         let private_routes = 
+         warp::path("admin")
+        .and(warp::get())
+        .and(warp::fs::dir("src/public/admin/"));
+
          let public_routes = 
          warp::path("home")
         .and(warp::get())
@@ -99,6 +104,7 @@ pub mod server {
 
         let routes = 
         public_routes
+        .or(private_routes)
         .or(get_css)
         .or(get_images)
         .or(fallback_routes)
@@ -294,7 +300,7 @@ mod routes {
                     message: "Image uploaded successfully".to_string(),
                     data: Some(
                         Registrant{ 
-                        profile_picture:format!("src/photos/{}.png", &file_path), 
+                        profile_picture:format!("{}.png", &file_path), 
                         ..Default::default()
                     })
                 };

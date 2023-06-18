@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/tokens.css" />
+    <link rel="stylesheet" href="/css/utilities.css" />
+    <link rel="stylesheet" href="/css/app.css" />
+    <title>Document</title>
+  </head>
+  <body onload="getUsers()">
+    <main id="users-table"></main>
+  </body>
+  <script>
+    async function getUsers() {
+      const usersTable = document.getElementById("users-table");
+
+      try {
+        const req = await fetch("http://localhost:3030/api/users");
+        const res = await req.json();
+
+        console.log(res);
+
+        for (let user of res) {
+          const wrapper = document.createElement("div");
+
+          const card = `
+         <div class="d-flex align-items-center justify-content-start p3 mx-0 mb-4 rounded-3 card">
+            <a href="/admin/user/${user.id}"><img src="/images/${
+            user.profile_picture
+          }" alt="avatar" class="avatar d-block rounded-3 me-4 flex-nowrap" />
+            </a>
+            <h3 class="me-4 my-0 w-100">${user.first_name} ${user.last_name}, ${
+            user.age
+          }</h3>    
+                
+            <button onclick="check(${user.id}, ${user.checked_in})" id="${
+            user.id
+          }" class=" ${
+            user.checked_in
+              ? "checked_in bg-success rounded-circle d-block flex-nowrap"
+              : "checked_out bg-danger rounded-circle nd-block flex-nowrap"
+          }"></button>
+        </div>
+         `;
+          wrapper.innerHTML = card;
+          usersTable.appendChild(wrapper);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  </script>
+
+  <script>
+    async function check(id, status) {
+      const userId = document.getElementById(id);
+      console.log(userId);
+
+      try {
+        const req = await fetch(
+          `http://localhost:3030/api/users/${
+            status === 0 ? "checkin" : "checkout"
+          }/${id}`,
+          {
+            method: "PUT",
+          }
+        );
+        const res = await req.json();
+
+        if (res.status === 200 && status === 0) {
+          userId.classList.remove("checked_out", "bgq-danger");
+          userId.classList.add("checked_in", "bg-success");
+        } else if (res.status === 200 && status === 1) {
+          userId.classList.remove("checked_in", "bg-success");
+          userId.classList.add("checked_out", "bg-danger");
+        }
+        console.log(res);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  </script>
+</html>

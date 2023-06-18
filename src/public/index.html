@@ -339,14 +339,13 @@
       age: parseInt(age),
       gender: parseInt(gender),
       profile_picture,
+      checked_in: 0,
       guardian: {
         first_name: guardian_fn,
         last_name: guardian_ln,
         phone_number: parseInt(phone_number),
       },
     });
-
-    console.log(body);
 
     if (!canContinue) {
       return;
@@ -364,6 +363,7 @@
       });
       const res = await req.json();
 
+      console.log(res);
       if (res?.data?.id) {
         const router = `/home/success.html?user=${res?.data?.id}`;
         location.href = router;
@@ -371,48 +371,6 @@
     } catch (error) {
       console.error(error);
     }
-  };
-</script>
-
-<script>
-  const checkInUser = async () => {
-    console.log(user_id);
-    const req = await fetch(`api/users/checkin/${user_id.value}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    const res = await req.json();
-    console.log(res);
-  };
-
-  const checkOutUser = async () => {
-    const req = await fetch(`api/users/checkout/${user_id.value}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    const res = await req.json();
-    console.log(res);
-  };
-</script>
-
-<!-- custom radios -->
-<script>
-  const deleteUser = async () => {
-    const req = await fetch(`api/users/checkin/${user_id.value}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    const res = await req.json();
-    console.log(res);
   };
 </script>
 

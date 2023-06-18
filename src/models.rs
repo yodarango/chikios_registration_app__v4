@@ -9,6 +9,7 @@
             pub first_name: String,
             pub last_name: String,
             pub id: Option<u64>,
+            pub checked_in: u8,
             pub gender: u8,
             pub age: u8,
         }
@@ -21,6 +22,7 @@
                     profile_picture: String::default(),
                     created_date: None,
                     guardian: None,
+                    checked_in: 0,
                     id: None,
                     gender: 0,
                     age: 0,
