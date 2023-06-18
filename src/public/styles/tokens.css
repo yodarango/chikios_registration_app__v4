@@ -1,0 +1,137 @@
+:root {
+  /* FONTS  */
+  --dr-font-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --dr-font-monospace: SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+  --dr-body-font-family: var(--dr-font-sans-serif);
+  --dr-body-font-size: 1.6rem;
+  --dr-body-font-weight: 400;
+  --dr-body-line-height: 1.5;
+
+  /* RADIUSES */
+  --dr-border-radius-sm: 0.5rem;
+  --dr-border-radius: 0.75rem;
+  --dr-border-radius-lg: 1.25rem;
+  --dr-border-radius-xl: 2rem;
+  --dr-border-radius-xxl: 3rem;
+
+  /* BORDERS */
+  --dr-border-width: 1px;
+  --dr-border-style: solid;
+  --dr-border-color: #ffffff;
+
+  /* BUTTONS */
+  --dr-btn-padding-y: 1rem;
+  --dr-btn-padding-x: 1.6rem;
+  --dr-btn-font-family: var(--dr-font-sans-serif);
+  --dr-btn-font-size: 1.6rem;
+  --dr-btn-font-weight: 400;
+}
+
+:root,
+[data-bs-theme="light"] {
+  /* APP COLORS  */
+  --dr-font-color: #ffffff; /* app lettering */
+  --dr-primary: #131124; /* app background */
+  --dr-secondary: #272348; /* app foreground contrast */
+  --dr-tertiary: #ffffff; /* app foreground on foreground */
+  --dr-quaternary: #00d1ff; /* app accent */
+  --dr-quinary: #175515;
+  /* --dr-senary: #e9ecef;
+  --dr-septenary: #dee2e6;
+  --dr-octonary: #ced4da;
+  --dr-nonary: #adb5bd;
+  --dr-denary: #6c757d; */
+
+  /* GENERIC COLORS  */
+  --dr-blue: #0d6efd;
+  --dr-indigo: #6610f2;
+  --dr-purple: #6f42c1;
+  --dr-pink: #d63384;
+  --dr-red: #dc3545;
+  --dr-orange: #fd7e14;
+  --dr-yellow: #ffc107;
+  --dr-green: #198754;
+  --dr-teal: #20c997;
+  --dr-cyan: #0dcaf0;
+  --dr-black: #000;
+  --dr-white: #fff;
+  --dr-gray: #6c757d;
+  --dr-charcoal: #242424;
+  --dr-gray-100: #f8f9fa;
+  --dr-gray-200: #e9ecef;
+  --dr-gray-300: #dee2e6;
+  --dr-gray-400: #ced4da;
+  --dr-gray-500: #adb5bd;
+  --dr-gray-600: #6c757d;
+  --dr-gray-700: #495057;
+  --dr-gray-800: #343a40;
+  --dr-gray-900: #212529;
+
+  /* STATEFUL COLORS */
+  --dr-success: #6af548;
+  --dr-success-subtle: #d1e7dd;
+  --dr-info: #0dcaf0;
+  --dr-info-subtle: #cff4fc;
+  --dr-warning: #ffc107;
+  --dr-warning-subtle: #fff3cd;
+  --dr-danger: #f54848;
+  --dr-danger-subtle: #f8d7da;
+
+  /* SHADOWS */
+  --dr-box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  --dr-box-shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  --dr-box-shadow-lg: 0 1rem 3rem rgba(0, 0, 0, 0.175);
+  --dr-box-shadow-inset: inset 0 1px 2px rgba(0, 0, 0, 0.075);
+}
+
+[data-bs-theme="dark"] {
+  color-scheme: dark;
+  /* APP COLORS  */
+  --dr-secondary: #6c757d;
+  --dr-ternary: #495057;
+  --dr-primary: #0d6efd;
+
+  /* GENERIC COLORS  */
+  --dr-blue: #0d6efd;
+  --dr-indigo: #6610f2;
+  --dr-purple: #6f42c1;
+  --dr-pink: #d63384;
+  --dr-red: #dc3545;
+  --dr-orange: #fd7e14;
+  --dr-yellow: #ffc107;
+  --dr-green: #198754;
+  --dr-teal: #20c997;
+  --dr-cyan: #0dcaf0;
+  --dr-black: #000;
+  --dr-white: #fff;
+  --dr-gray: #6c757d;
+  --dr-charcoal: #242424;
+  --dr-gray-100: #f8f9fa;
+  --dr-gray-200: #e9ecef;
+  --dr-gray-300: #dee2e6;
+  --dr-gray-400: #ced4da;
+  --dr-gray-500: #adb5bd;
+  --dr-gray-600: #6c757d;
+  --dr-gray-700: #495057;
+  --dr-gray-800: #343a40;
+  --dr-gray-900: #212529;
+
+  /* STATEFUL COLORS */
+  --dr-success: #198754;
+  --dr-success-subtle: #d1e7dd;
+  --dr-info: #0dcaf0;
+  --dr-info-subtle: #cff4fc;
+  --dr-warning: #ffc107;
+  --dr-warning-subtle: #fff3cd;
+  --dr-danger: #dc3545;
+  --dr-danger-subtle: #f8d7da;
+
+  /* SHADOWS */
+  --dr-box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  --dr-box-shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  --dr-box-shadow-lg: 0 1rem 3rem rgba(0, 0, 0, 0.175);
+  --dr-box-shadow-inset: inset 0 1px 2px rgba(0, 0, 0, 0.075);
+}

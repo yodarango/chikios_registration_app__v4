@@ -1,0 +1,127 @@
+body {
+  background-color: var(--);
+}
+
+.thumbnail {
+  object-position: center;
+  border-radius: 1em;
+  object-fit: cover;
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+}
+
+.chikios-paragraph {
+  padding: 0;
+  margin: 0;
+}
+
+.form_input,
+.form_input_number,
+.form_textarea {
+  color: var(--dr-font-color);
+  border: none;
+  resize: none;
+}
+
+.form_input:focus,
+.form_input_number:focus,
+.form_textarea:focus {
+  outline: none;
+  border: 1px solid var(--dr-quaternary);
+}
+
+.form_input::placeholder,
+.form_input_number::placeholder,
+.form_textarea::placeholder {
+  color: var(--font-color);
+  opacity: 0.6;
+}
+
+.form_input_number {
+  width: 6rem;
+}
+
+.btn.primary {
+  background-color: var(--dr-quaternary);
+  color: var(--dr-primary);
+}
+body {
+  background: #131124 !important;
+  color: white !important;
+}
+
+.form_input,
+.form_input-number,
+.form_textarea {
+  border: none !important;
+  background-color: #272348 !important;
+  outline: none !important;
+  color: white !important;
+}
+
+.form_input::placeholder,
+.form_input-number::placeholder {
+  color: #a0a0a0 !important;
+}
+
+.form_input:focus,
+.form_input-number:focus,
+.form_textarea:focus {
+  border: 1px solid #00d1ff !important;
+}
+
+.form_input-number {
+  width: 12rem;
+}
+
+.btn.primary {
+  background-color: #00d1ff !important;
+  border: none;
+  color: white !important;
+}
+
+#malebtn,
+#femalebtn {
+  background-color: #272348 !important;
+  color: white !important;
+  outline: none !important;
+  height: 4.5rem;
+  width: 4.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+}
+
+.bg-success {
+  background-color: #6af548 !important;
+  color: #272348;
+}
+
+.bg-warning {
+  background-color: #f5f548 !important;
+  color: #272348;
+}
+
+#malebtn.active {
+  border: 1px solid #00d1ff !important;
+  color: #00d1ff !important;
+}
+#femalebtn.active {
+  border: 1px solid #ff5af4 !important;
+  color: #ff5af4 !important;
+}
+
+.prof-pic img,
+.registration-img {
+  width: 25rem;
+  object-fit: contain;
+  object-position: center;
+}
+
+main {
+  width: 90%;
+  max-width: 500px;
+  margin: auto;
+}

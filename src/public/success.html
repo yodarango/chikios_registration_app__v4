@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/tokens.css" />
+    <link rel="stylesheet" href="/css/utilities.css" />
+    <link rel="stylesheet" href="/css/app.css" />
+    <!-- <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script> -->
+    <script
+      type="text/javascript"
+      src="https://unpkg.com/qr-code-styling@1.5.0/lib/qr-code-styling.js"
+    ></script>
+
+    <title>Success | Child registered successfully</title>
+  </head>
+  <body onload="generateQRCode()">
+    <main class="pt-5">
+      <h1 class="w-100 text-center color-success">
+        Registration successful 🎉
+      </h1>
+      <!-- <img
+        src="/home/images/baby_e.jpg"
+        alt="Baby elephant"
+        class="d-block m-auto registration-img rounded-4 mt-4 mb-2"
+      />
+      <a
+        class="color-quaternary text-center fs-5 w-100 d-block"
+        href="https://www.freepik.com/free-vector/cute-elephant-sitting-waving-hand-cartoon-vector-icon-illustration_11047569.htm#query=baby%20animals&position=39&from_view=search&track=ais"
+        >Image by catalyststuff</a
+      > -->
+      <p class="my-4 m-auto text-center pt-5">
+        Please screenshot the QR to check in/ out your child
+      </p>
+      <div
+        id="qrcode-container"
+        class="w-100 d-flex align-items-center justify-content-center"
+      ></div>
+
+      <a class="btn primary w-100 mt-5 mb-3 mx-auto" href="/">Done</a>
+      <button class="btn bg-success w-100 my0 mx-auto" onclick="downloadQR()">Download</btton>
+    </main>
+
+    <script>
+      function generateQRCode(isDownload = false) {
+        let userId = location.search.split("user=")[1];
+        
+        var container = document.getElementById("qrcode-container");
+
+        const qrCode = new QRCodeStyling({
+          width: 250,
+          height: 250,
+          type: "svg",
+          data: `https://chikos.shrood.com/home/users?${userId}`,
+          margin: 0,
+          qrOptions: {
+            typeNumber: "0",
+            mode: "Byte",
+            errorCorrectionLevel: "Q",
+          },
+          imageOptions: { hideBackgroundDots: true, imageSize: 0.4, margin: 0 },
+          dotsOptions: { type: "extra-rounded", color: "#006eff" },
+          backgroundOptions: { color: "#ffffff" },
+          dotsOptionsHelper: {
+            colorType: { single: true, gradient: false },
+            gradient: {
+              linear: true,
+              radial: false,
+              color1: "#6a1a4c",
+              color2: "#6a1a4c",
+              rotation: "0",
+            },
+          },
+          cornersSquareOptions: { type: "extra-rounded", color: "#dd0e0e" },
+          cornersSquareOptionsHelper: {
+            colorType: { single: true, gradient: false },
+            gradient: {
+              linear: true,
+              radial: false,
+              color1: "#000000",
+              color2: "#000000",
+              rotation: "0",
+            },
+          },
+          cornersDotOptions: { type: "", color: "#6600ff" },
+          cornersDotOptionsHelper: {
+            colorType: { single: true, gradient: false },
+            gradient: {
+              linear: true,
+              radial: false,
+              color1: "#000000",
+              color2: "#000000",
+              rotation: "0",
+            },
+          },
+          backgroundOptionsHelper: {
+            colorType: { single: true, gradient: false },
+            gradient: {
+              linear: true,
+              radial: false,
+              color1: "#ffffff",
+              color2: "#ffffff",
+              rotation: "0",
+            },
+          },
+        });
+
+        if(!isDownload) {
+            qrCode.append(document.getElementById("qrcode-container"));
+        }
+       
+        return qrCode
+      }
+
+      function downloadQR () {
+        const qrCode = generateQRCode(true)
+         qrCode.download({ name: "qr", extension: "svg" });
+     }
+     
+    </script>
+  </body>
+</html>

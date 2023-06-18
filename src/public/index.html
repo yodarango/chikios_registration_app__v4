@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/tokens.css" />
+    <link rel="stylesheet" href="/css/utilities.css" />
+    <link rel="stylesheet" href="/css/app.css" />
+
+    <title>Document</title>
+  </head>
+  <body>
+    <main>
+      <div class="pt-5">
+        <h1 class="mb-3">Register</h1>
+        <h3 class="mb-3 mx-0d mt-0">Child info</h3>
+        <div
+          id="profile_pic"
+          class="d-flex align-items-center justify-content-center prof-pic"
+        ></div>
+        <input
+          type="file"
+          id="upload-photo"
+          name="upload-photo"
+          accept="image/png, image/jpeg"
+          hidden="hidden"
+          onchange="handleFileUpload(event)"
+        />
+
+        <div id="photo-btn-container">
+          <button
+            class="w-100 btn rounded-2 primary d-block mt-2 mx-auto mb-5"
+            onclick="toggleUpload()"
+          >
+            <span>Upload photo</span>
+          </button>
+        </div>
+
+        <section id="form-data" class="d-none">
+          <input type="text" id="img-url" hidden />
+          <div class="mb-5">
+            <div
+              class="d-flex align-items-center flex-nowrap flex-wrap w-100 mb-4"
+            >
+              <div style="min-width: 100px">
+                <p
+                  style="font-size: 16px"
+                  class="chikios-paragraph me-3 flex-shrink-0 text-left"
+                >
+                  First name:
+                </p>
+              </div>
+              <div class="w-100">
+                <input
+                  type="text"
+                  placeholder="Enter first name"
+                  class="form_input p-3 bg-info-subtle rounded-3 w-100"
+                  id="fn"
+                />
+                <div
+                  data-lastpass-icon-root="true"
+                  style="
+                    position: relative !important;
+                    height: 0px !important;
+                    width: 0px !important;
+                    float: left !important;
+                  "
+                ></div>
+              </div>
+            </div>
+            <div
+              class="d-flex align-items-center flex-nowrap flex-wrap w-100 mb-4"
+            >
+              <div style="min-width: 100px">
+                <p
+                  style="font-size: 16px"
+                  class="chikios-paragraph me-3 flex-shrink-0 text-left"
+                >
+                  Last name:
+                </p>
+              </div>
+              <div class="w-100">
+                <input
+                  type="text"
+                  placeholder="Enter last name"
+                  class="form_input p-3 rounded-3 w-100"
+                  id="ln"
+                />
+              </div>
+            </div>
+            <div
+              class="d-flex align-items-center flex-nowrap flex-wrap w-100 mb-4"
+            >
+              <div style="min-width: 100px">
+                <p
+                  style="font-size: 16px"
+                  class="chikios-paragraph me-3 flex-shrink-0 text-left"
+                >
+                  Age:
+                </p>
+              </div>
+              <div class="w-100">
+                <input
+                  type="number"
+                  placeholder="0"
+                  class="form_input-number p-3 rounded-3"
+                  id="age"
+                  max="11"
+                  min="4"
+                />
+              </div>
+            </div>
+            <div
+              class="d-flex align-items-center flex-nowrap flex-wrap w-100 mb-4"
+            >
+              <div style="min-width: 100px">
+                <p
+                  style="font-size: 16px"
+                  class="chikios-paragraph my-0 me-3 flex-shrink-0 text-left"
+                >
+                  Gender:
+                </p>
+              </div>
+              <div
+                class="w-100 d-flex align-items-center justify-content-start"
+              >
+                <input
+                  type="number"
+                  id="gender"
+                  name="gender"
+                  value="0"
+                  hidden
+                />
+
+                <button
+                  id="malebtn"
+                  onclick="handleGender(1, 'malebtn')"
+                  class="rounded-2 me-3"
+                >
+                  M
+                </button>
+                <button
+                  id="femalebtn"
+                  onclick="handleGender(2, 'femalebtn')"
+                  class="rounded-2"
+                >
+                  F
+                </button>
+              </div>
+            </div>
+          </div>
+          <h3 class="mb-3 mx-0d mt-0">Guardian</h3>
+          <div class="mb-5">
+            <div
+              class="d-flex align-items-center flex-nowrap flex-wrap w-100 mb-4"
+            >
+              <div style="min-width: 100px">
+                <p class="chikios-paragraph me-3 flex-shrink-0 text-left">
+                  First name:
+                </p>
+              </div>
+              <div class="w-100">
+                <input
+                  type="text"
+                  placeholder="Enter first name"
+                  class="form_input p-3 rounded-3 w-100"
+                  id="gfn"
+                />
+              </div>
+            </div>
+            <div
+              class="d-flex align-items-center flex-nowrap flex-wrap w-100 mb-4"
+            >
+              <div style="min-width: 100px">
+                <p class="chikios-paragraph me-3 flex-shrink-0 text-left">
+                  Last name:
+                </p>
+              </div>
+              <div class="w-100">
+                <input
+                  type="text"
+                  placeholder="Enter last name"
+                  class="form_input p-3 rounded-3 w-100"
+                  id="gln"
+                />
+              </div>
+            </div>
+            <div
+              class="d-flex align-items-center flex-nowrap flex-wrap w-100 mb-4"
+            >
+              <div style="min-width: 100px">
+                <p s class="chikios-paragraph me-3 flex-shrink-0 text-left">
+                  Phone #:
+                </p>
+              </div>
+              <div class="w-100">
+                <input
+                  type="text"
+                  placeholder="Enter phone number"
+                  class="form_input p-3 rounded-3 w-100"
+                  id="gphone"
+                />
+              </div>
+            </div>
+            <div
+              class="d-flex align-items-start justify-content-center flex-nowrap mb-4"
+            >
+              <p
+                style="min-width: 100px"
+                class="chikios-paragraph mb-2 text-left"
+              >
+                Notes:
+              </p>
+              <textarea
+                placeholder="Is there anything we should know about your child?"
+                rows="3"
+                class="form_textarea d-block bg-secondary p-3 rounded-3 color-tertiary w-100"
+              ></textarea>
+            </div>
+          </div>
+          <button
+            class="btn rounded-1 primary w-100"
+            onclick="handleRegister()"
+          >
+            <span>Register</span>
+          </button>
+        </section>
+      </div>
+    </main>
+  </body>
+</html>
+
+<!-- handle upload -->
+<script>
+  const submitPhoto = async (file) => {
+    const button = document.getElementById("photo-btn-container");
+    const formDataEl = document.getElementById("form-data");
+
+    if (file) {
+      const formData = new FormData();
+      formData.append("image", file);
+
+      try {
+        const req = await fetch("http://localhost:3030/api/upload-photo", {
+          method: "POST",
+          body: formData,
+        });
+
+        const res = await req.json();
+        if (res.status === 200) {
+          button.querySelector("button").remove();
+          button.querySelector(".bg-warning").remove();
+
+          const successMessage = document.createElement("div");
+          successMessage.innerHTML = `<p role="status" class="text-center p-2 mb-5 ">Photo uploaded successfully!</p>`;
+          successMessage.classList.add("bg-success");
+          button.appendChild(successMessage);
+
+          formDataEl.classList.remove("d-none");
+          formDataEl.classList.add("d-block");
+          return res.data.profile_picture;
+        } else {
+          return false;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+</script>
+
+<!--  render image to screen -->
+<script>
+  async function handleFileUpload(event) {
+    const button = document.getElementById("photo-btn-container");
+
+    button.querySelector("button").classList.add("d-none");
+    const loader = document.createElement("div");
+    loader.innerHTML = `<p role="status" class="text-center p-2">Uploading...</p>`;
+    loader.classList.add("bg-warning");
+    button.appendChild(loader);
+
+    const prof_pic = document.getElementById("img-url");
+    const file = event.target.files[0];
+    const maxSize = 5 * 1024 * 1024; // 5MB
+
+    if (file.size > maxSize) {
+      alert("The image size exceeds the limit of 5MB.");
+      return;
+    }
+
+    let canPainPhoto = false;
+    if (file) {
+      canPainPhoto = await submitPhoto(file);
+      prof_pic.value = canPainPhoto;
+    }
+    if (canPainPhoto) {
+      const reader = new FileReader();
+
+      reader.onload = function (e) {
+        const img = document.createElement("img");
+        img.src = e.target.result;
+        document.getElementById("profile_pic").appendChild(img);
+      };
+
+      reader.readAsDataURL(file);
+    }
+  }
+
+  const inputPhoto = document.getElementById("upload-photo");
+
+  function toggleUpload() {
+    inputPhoto.click();
+  }
+</script>
+
+<!--  submit the data -->
+<script>
+  const user_id = document.getElementById("user_id");
+
+  const handleRegister = async (event) => {
+    // Get form field values
+    const first_name = document.getElementById("fn").value;
+    const last_name = document.getElementById("ln").value;
+    const age = document.getElementById("age").value;
+    const gender = document.getElementById("gender").value;
+    const guardian_fn = document.getElementById("gfn").value;
+    const guardian_ln = document.getElementById("gln").value;
+    const phone_number = document.getElementById("gphone").value;
+    const profile_picture = document.getElementById("img-url").value;
+
+    const canContinue = validateInputs();
+
+    // Create JSON body
+    const body = JSON.stringify({
+      first_name,
+      last_name,
+      age: parseInt(age),
+      gender: parseInt(gender),
+      profile_picture,
+      guardian: {
+        first_name: guardian_fn,
+        last_name: guardian_ln,
+        phone_number: parseInt(phone_number),
+      },
+    });
+
+    console.log(body);
+
+    if (!canContinue) {
+      return;
+    }
+
+    // Send POST request using fetch
+    try {
+      const req = await fetch("http://localhost:3030/api/users/new", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        // mode: "no-cors",
+        body,
+      });
+      const res = await req.json();
+
+      if (res?.data?.id) {
+        const router = `/home/success.html?user=${res?.data?.id}`;
+        location.href = router;
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+</script>
+
+<script>
+  const checkInUser = async () => {
+    console.log(user_id);
+    const req = await fetch(`api/users/checkin/${user_id.value}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const res = await req.json();
+    console.log(res);
+  };
+
+  const checkOutUser = async () => {
+    const req = await fetch(`api/users/checkout/${user_id.value}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const res = await req.json();
+    console.log(res);
+  };
+</script>
+
+<!-- custom radios -->
+<script>
+  const deleteUser = async () => {
+    const req = await fetch(`api/users/checkin/${user_id.value}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const res = await req.json();
+    console.log(res);
+  };
+</script>
+
+<script>
+  function handleGender(value, gender) {
+    const radioInput = document.getElementById("gender");
+    const buttonContainer = document.getElementById(gender);
+
+    const buttonMale = document.querySelector("#malebtn");
+    const buttonFemale = document.querySelector("#femalebtn");
+
+    buttonMale.classList.remove("active");
+    buttonFemale.classList.remove("active");
+
+    buttonContainer.classList.add("active");
+
+    radioInput.value = value;
+  }
+</script>
+
+<!-- validate my inputs -->
+<script>
+  function validateInputs() {
+    const first_name = document.getElementById("fn").value;
+    const last_name = document.getElementById("ln").value;
+    const age = document.getElementById("age").value;
+    const gender = document.getElementById("gender").value;
+    const guardian_fn = document.getElementById("gfn").value;
+    const guardian_ln = document.getElementById("gln").value;
+    const phone_number = document.getElementById("gphone").value;
+    const profile_picture = document.getElementById("img-url").value;
+
+    // Check if any of the required fields are empty or equal to zero
+    if (
+      first_name &&
+      last_name &&
+      age > 3 &&
+      gender > 0 &&
+      guardian_fn &&
+      guardian_ln &&
+      phone_number &&
+      profile_picture
+    ) {
+      return true;
+    } else {
+      alert("Please fill in all required fields");
+      return false;
+    }
+  }
+</script>
