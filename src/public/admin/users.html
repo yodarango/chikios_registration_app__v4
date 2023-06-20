@@ -55,17 +55,26 @@
       const usersTable = document.getElementById("users-table");
       if (!isLoadMore) usersTable.innerHTML = "";
 
+      const auth = localStorage.getItem("auth") || null;
+
+      if (!auth) return (window.location.href = "/admin/login.html");
+
       try {
         const req = await fetch(
-          "http://localhost:3030/api/users?" + count + `&${ln}`
+          "http://localhost:3030/api/users?" + count + `&${ln}`,
+          {
+            headers: {
+              auth,
+            },
+          }
         );
         const res = await req.json();
 
-        if (res.length === 2) {
+        if (res.length === 20) {
           loadMore.classList.remove("d-none");
           loadMore.classList.add("d-block");
           const currentCount = loadMore.dataset.results;
-          loadMore.dataset.results = `${Number(currentCount) + 2}`;
+          loadMore.dataset.results = `${Number(currentCount) + 20}`;
         } else {
           loadMore.classList.remove("d-block");
           loadMore.classList.add("d-none");

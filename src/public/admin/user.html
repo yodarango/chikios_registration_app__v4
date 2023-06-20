@@ -21,9 +21,18 @@
 
         const userId = location.search.split("user=")[1];
 
+        const auth = localStorage.getItem("auth") || null;
+
+        if (!auth) return (window.location.href = "/admin/login.html");
+
         try {
           const req = await fetch(
-            "http://localhost:3030/api/users" + `/${userId}`
+            "http://localhost:3030/api/users" + `/${userId}`,
+            {
+              headers: {
+                auth,
+              },
+            }
           );
           const user = await req.json();
 

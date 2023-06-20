@@ -1,5 +1,5 @@
 pub mod server {
-    use crate::db::{get_connection, with_db};
+    use crate::{db::{get_connection, with_db}, auth::authorize};
     use super::routes::{get, post, put, delete, files};
     use std::collections::HashMap;
     use warp::{Filter};
@@ -24,6 +24,7 @@ pub mod server {
              root_path
             .and(warp::get())
             .and(warp::path!("users" / String))
+            .and(warp::header::<String>("auth"))
             .and(with_db(pool.clone()))
             .and_then(get::get_user)
             )
@@ -32,11 +33,12 @@ pub mod server {
             .and(warp::get())
             .and(warp::path("users"))
             .and(warp::query::<HashMap<String, String>>())
+            .and(warp::header::<String>("auth"))
             .and(with_db(pool.clone()))
-            .and_then(|query:HashMap<String, String>, pool| {
+            .and_then(|query:HashMap<String, String>, header:String, pool| {
                 let from_id=query.get("fromid").map_or_else(|| String::from("0"), |s| s.to_owned());
                 let last_name = query.get("ln").map_or_else(|| String::from(""), |s| s.to_owned());
-                get::get_users_handler(Some(from_id), Some(last_name), pool)
+                get::get_users_handler(Some(from_id), Some(last_name), Some(header), pool)
             })
             )
             // create new user
@@ -49,12 +51,22 @@ pub mod server {
                 .and(with_db(pool.clone()))
                 .and_then(post::create_registration)
             )
+            // login
+            .or(
+                root_path
+                .and(warp::post())
+                .and(warp::path("admin"))
+                .and(warp::path("login"))
+                .and(warp::body::json())
+                .and_then(authorize)
+            )
             // check in a user 
             .or(
                 root_path
                 .and(warp::put())
                 .and(warp::path("users"))
                 .and(warp::path!("checkin" / u64))
+                .and(warp::header::<String>("auth"))
                 .and(with_db(pool.clone()))
                 .and_then(put::check_in_user)
             )
@@ -64,6 +76,7 @@ pub mod server {
                 .and(warp::put())
                 .and(warp::path("users"))
                 .and(warp::path!("checkout" / u64))
+                .and(warp::header::<String>("auth"))
                 .and(with_db(pool.clone()))
                 .and_then(put::check_out_user)
             )
@@ -143,9 +156,9 @@ mod routes {
             use anyhow::{Result};
                 
                 // gets all users starting from the id passed in the query
-            pub async fn get_users_handler(from_id: Option<String>, ln: Option<String>, pool: Pool) -> Result<impl Reply, Rejection> {
+            pub async fn get_users_handler(from_id: Option<String>, ln: Option<String>, header: Option<String>, pool: Pool) -> Result<impl Reply, Rejection> {
       
-                let get_users= get::get_all_users(from_id, ln, pool).await;
+                let get_users= get::get_all_users(from_id, ln, header, pool).await;
       
                 let users = match get_users {
                     Ok(users) => users,
@@ -157,8 +170,8 @@ mod routes {
             }
 
             // get a specific user
-            pub async fn get_user(id: String, pool:Pool) -> Result<impl Reply, Rejection>{
-                let get_user = get::get_user(id, pool).await;
+            pub async fn get_user(id: String, header: String, pool:Pool) -> Result<impl Reply, Rejection>{
+                let get_user = get::get_user(id, header, pool).await;
                 let user = match get_user {
                     Ok(user) => user,
                     Err(e) => panic!("couldn't get user: {}", e),
@@ -215,8 +228,8 @@ mod routes {
               use anyhow::{Result};
 
             // check in the registered user
-            pub async fn check_in_user(user_id: u64, pool: Pool) -> Result<impl Reply, Rejection> {
-                let response = match put::check_in_user(user_id, pool).await {
+            pub async fn check_in_user(user_id: u64, header: String, pool: Pool) -> Result<impl Reply, Rejection> {
+                let response = match put::check_in_user(user_id, header,  pool).await {
                     Ok(response) => response,
                     Err(e)=> panic!("Error! Could not check in user: {}", e),
                 };
@@ -225,8 +238,8 @@ mod routes {
             }
 
            // check in the registered user
-            pub async fn check_out_user(user_id: u64, pool: Pool) -> Result<impl Reply, Rejection> {
-                let response = match put::check_out_user(user_id, pool).await {
+            pub async fn check_out_user(user_id: u64, header: String,  pool: Pool) -> Result<impl Reply, Rejection> {
+                let response = match put::check_out_user(user_id, header,  pool).await {
                     Ok(response) => response,
                     Err(e)=> panic!("Error! Could not check out user: {}", e),
                 };

@@ -16,10 +16,18 @@ pub fn with_db(pool: Pool) -> impl Filter<Extract = (Pool,), Error = Infallible>
 pub mod queries {
     pub mod get {
         use mysql_async::{prelude::*, Pool, Error};
+        use warp::{hyper::StatusCode, reply::WithStatus};
         use crate::models::models::{Guardian,Registrant};
 
-        pub async fn get_all_users(from_id: Option<String>, ln: Option<String>, pool: Pool) -> Result<Vec<Registrant>, Error> {
+        pub async fn get_all_users(from_id: Option<String>, ln: Option<String>, header: Option<String>,  pool: Pool) -> Result<Vec<Registrant>, Error> {
         
+               if let Some(header) = header {
+                    if header != "3Wq94yEsdn_93_394JjkVh_o2"{
+                      Ok::<WithStatus<&str>, Error>(warp::reply::with_status("NOT_AUTH", StatusCode::NOT_FOUND));
+                      return Ok(vec![]);
+                    }
+                }
+
                 let mut conn = match pool.get_conn().await {
                     Ok(conn) => conn,
                     Err(e) => panic!("couldn't get connection: {}", e),
@@ -43,7 +51,7 @@ pub mod queries {
                 ON r.id = g.registrant_id 
                 AND r.last_name LIKE ?  
                 ORDER BY r.last_name ASC
-                LIMIT 2 OFFSET ?"
+                LIMIT 20 OFFSET ?"
                 .with((ln, from_id, ))
                 .map(&mut conn, |(id, first_name, last_name, gender, age, guardian_fn, guardian_ln, guardian_phone , profile_picture, checked_in)| 
                     Registrant { 
@@ -77,7 +85,14 @@ pub mod queries {
                 Ok(users)
         }
 
-        pub async fn get_user (id: String, pool: Pool) -> Result<Registrant, Error> {
+        pub async fn get_user (id: String, header: String, pool: Pool) -> Result<Registrant, Error> {
+            if !header.is_empty() {
+                if header != "3Wq94yEsdn_93_394JjkVh_o2"{
+                    Ok::<WithStatus<&str>, Error>(warp::reply::with_status("NOT_AUTH", StatusCode::NOT_FOUND));
+                    return Ok(Registrant::default());
+                }
+             }
+            
             let mut conn = pool.get_conn().await?; // ? is the same as match Ok(conn) => conn, Err(e) => return Err(e)
              
              let query = 
@@ -217,10 +232,17 @@ pub mod queries {
     
     pub mod put {
         use mysql_async::{prelude::*, Pool, Error};
-        use warp::{reply::json, Reply};
+        use warp::{reply::{json, WithStatus}, Reply, hyper::StatusCode};
         use crate::models::models::{Response};
 
-        pub async fn check_in_user (user_id: u64, pool: Pool) -> Result<impl Reply, Error> {
+        pub async fn check_in_user (user_id: u64, header:String,  pool: Pool) -> Result<impl Reply, Error> {
+              if !header.is_empty() {
+                if header != "3Wq94yEsdn_93_394JjkVh_o2"{
+                    Ok::<WithStatus<&str>, Error>(warp::reply::with_status("NOT_AUTH", StatusCode::NOT_FOUND));
+                    return Ok(json::<_>(&0));
+                }
+             }
+
             let mut conn = pool.get_conn().await?;
             let query = "UPDATE registrant SET checked_in = 1 WHERE id = :user_id";
 
@@ -235,7 +257,14 @@ pub mod queries {
             Ok(json::<_>(&result))
         }
          
-         pub async fn check_out_user (user_id: u64, pool: Pool) -> Result<impl Reply, Error> {
+         pub async fn check_out_user (user_id: u64, header:String,  pool: Pool) -> Result<impl Reply, Error> {
+              if !header.is_empty() {
+                if header != "3Wq94yEsdn_93_394JjkVh_o2"{
+                    Ok::<WithStatus<&str>, Error>(warp::reply::with_status("NOT_AUTH", StatusCode::NOT_FOUND));
+                    return Ok(json::<_>(&0));
+                }
+             }
+             
             let mut conn = pool.get_conn().await?;
             let query = "UPDATE registrant SET checked_in = 0 WHERE id = :user_id";
 
