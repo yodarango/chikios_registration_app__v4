@@ -275,12 +275,6 @@
   async function handleFileUpload(event) {
     const button = document.getElementById("photo-btn-container");
 
-    button.querySelector("button").classList.add("d-none");
-    const loader = document.createElement("div");
-    loader.innerHTML = `<p role="status" class="text-center p-2">Uploading...</p>`;
-    loader.classList.add("bg-warning");
-    button.appendChild(loader);
-
     const prof_pic = document.getElementById("img-url");
     const file = event.target.files[0];
     const maxSize = 5 * 1024 * 1024; // 5MB
@@ -289,6 +283,12 @@
       alert("The image size exceeds the limit of 5MB.");
       return;
     }
+
+    button.querySelector("button").classList.add("d-none");
+    const loader = document.createElement("div");
+    loader.innerHTML = `<p role="status" class="text-center p-2">Uploading...</p>`;
+    loader.classList.add("bg-warning");
+    button.appendChild(loader);
 
     let canPainPhoto = false;
     if (file) {

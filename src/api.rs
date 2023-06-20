@@ -13,11 +13,20 @@ pub mod server {
         let root_path = warp::path("api");
 
         // stablish routes
-       let api_routes = root_path
+       let api_routes =
+            root_path
+            .and(warp::get())
+            .and(warp::path("users"))
+            .and(warp::path("count"))
+            .and(with_db(pool.clone()))
+            .and_then(get::get_count)
+             .or( 
+             root_path
             .and(warp::get())
             .and(warp::path!("users" / String))
             .and(with_db(pool.clone()))
             .and_then(get::get_user)
+            )
 
             .or(root_path
             .and(warp::get())
@@ -25,9 +34,9 @@ pub mod server {
             .and(warp::query::<HashMap<String, String>>())
             .and(with_db(pool.clone()))
             .and_then(|query:HashMap<String, String>, pool| {
-                let query=query.get("fromid").map_or_else(|| String::from("0"), |s| s.to_owned());
-
-                get::get_users_handler(query, pool)
+                let from_id=query.get("fromid").map_or_else(|| String::from("0"), |s| s.to_owned());
+                let last_name = query.get("ln").map_or_else(|| String::from(""), |s| s.to_owned());
+                get::get_users_handler(Some(from_id), Some(last_name), pool)
             })
             )
             // create new user
@@ -67,6 +76,7 @@ pub mod server {
                 .and(with_db(pool.clone()))
                 .and_then(delete::delete_user)
             )
+            
             // file upload
             .or(
                 root_path
@@ -129,12 +139,13 @@ mod routes {
             use warp::{Reply, Rejection};
             use crate::db::queries::get;
             use mysql_async::{Pool};
+            use serde_json::json;
             use anyhow::{Result};
                 
                 // gets all users starting from the id passed in the query
-            pub async fn get_users_handler(query: String, pool: Pool) -> Result<impl Reply, Rejection> {
+            pub async fn get_users_handler(from_id: Option<String>, ln: Option<String>, pool: Pool) -> Result<impl Reply, Rejection> {
       
-                let get_users= get::get_all_users(query, pool).await;
+                let get_users= get::get_all_users(from_id, ln, pool).await;
       
                 let users = match get_users {
                     Ok(users) => users,
@@ -157,13 +168,25 @@ mod routes {
                 Ok(reply)
 
             }
+
+            pub async fn get_count(pool:Pool) -> Result<impl Reply, Rejection>{
+                let count = get::get_count(pool).await;
+                let count = match count {
+                    Ok(count) => count,
+                    Err(e) => panic!("couldn't get count: {}", e),
+                };
+
+                let response = json!({"count": count});
+                Ok(warp::reply::json(&response))
+
+            }
         }
 
         // post routes
         pub mod post {
             use crate::models::models::Registrant;
             use crate::db::queries::post;
-            use warp::{Reply, Rejection, hyper::Uri};
+            use warp::{Reply, Rejection};
             use mysql_async::{Pool};
             use anyhow::{Result};
 
@@ -292,7 +315,6 @@ mod routes {
                 thumbnail.save(format!("src/photos/{}.png", &file_path)).expect("Could not save thumbnail");
                 //image::imageops::resize(&bytes_vec, 200, 200, image::imageops::FilterType::Nearest);
 
-                //println!("bytes_vec: {:?}", bytes_vec);
 
                
                 let response = Response {

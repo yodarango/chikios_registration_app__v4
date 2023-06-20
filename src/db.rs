@@ -18,21 +18,33 @@ pub mod queries {
         use mysql_async::{prelude::*, Pool, Error};
         use crate::models::models::{Guardian,Registrant};
 
-        pub async fn get_all_users(from_id: String, pool: Pool) -> Result<Vec<Registrant>, Error> {
+        pub async fn get_all_users(from_id: Option<String>, ln: Option<String>, pool: Pool) -> Result<Vec<Registrant>, Error> {
         
                 let mut conn = match pool.get_conn().await {
                     Ok(conn) => conn,
                     Err(e) => panic!("couldn't get connection: {}", e),
                 };
+           
+                let from_id = match from_id{
+                    Some(from_id) => from_id,
+                    None => "0".to_string()
+                };
+
+                let ln = match ln{
+                    Some(ln) => format!("%{}%", ln),
+                    None => "%%".to_string()
+                };
+
                 
                 let users = " 
                 SELECT r.id, r.first_name, r.last_name, r.gender, r.age, g.first_name AS guardian_fn, g.last_name AS guardian_ln, g.phone_number AS guardian_phone, r.profile_picture, r.checked_in
                 FROM registrant AS r
                 JOIN guardians AS g
                 ON r.id = g.registrant_id 
-                WHERE r.id > ? 
-                LIMIT 20"
-                .with((from_id,))
+                AND r.last_name LIKE ?  
+                ORDER BY r.last_name ASC
+                LIMIT 2 OFFSET ?"
+                .with((ln, from_id, ))
                 .map(&mut conn, |(id, first_name, last_name, gender, age, guardian_fn, guardian_ln, guardian_phone , profile_picture, checked_in)| 
                     Registrant { 
                         profile_picture,
@@ -122,6 +134,19 @@ pub mod queries {
 
              Ok(single_user)
 
+        }
+
+        pub async fn get_count (pool: Pool) -> Result<u16 , mysql_async::Error>{
+            let mut conn  = pool.get_conn().await?;
+
+            let count = "SELECT COUNT(ID) FROM registrant;"
+            .with(())
+            .map(&mut conn, |count| count)
+            .await?;
+
+            let count = count.get(0).unwrap_or(&0);
+
+            Ok(*count)
         }
 
         pub async fn get_last_user_id (pool: Pool) -> Result<u64, mysql_async::Error> {

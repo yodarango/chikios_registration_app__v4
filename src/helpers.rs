@@ -67,7 +67,7 @@ pub mod helpers {
             } else if err.find::<warp::reject::PayloadTooLarge>().is_some() {
             (StatusCode::BAD_REQUEST, "Payload too large".to_string())
             } else {
-            eprintln!("unhandled error: {:?}", err);
+            println!("unhandled error: {:?}", err);
                 (StatusCode::INTERNAL_SERVER_ERROR,
                 "Internal Server Error".to_string(),)
             };

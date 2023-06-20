@@ -10,31 +10,80 @@
     <title>Document</title>
   </head>
   <body onload="getUsers()">
-    <main id="users-table"></main>
+    <main>
+      <div id="count">
+        <h1
+          class="fs-2 fw-bold my-5 border-bottom d-flex align-items-center justify-content-between"
+        ></h1>
+      </div>
+      <div class="w-100 d-flex align-items-center justify-content-start mb-5">
+        <input
+          type="text"
+          placeholder="Search by last name "
+          class="form_input p-3 bg-info-subtle rounded-3 w-100 me-3"
+          id="search"
+        />
+        <button
+          class="bg-quaternary flex-shrink-0 my-0 me-3 color-primary"
+          onclick="handleSearch()"
+        >
+          Search
+        </button>
+        <button
+          class="bg-tertiary color-primary flex-shrink-0 m-0"
+          onclick="handleReset()"
+        >
+          Reset
+        </button>
+      </div>
+      <div id="users-table"></div>
+
+      <button
+        data-results="0"
+        class="w-100 bg-quaternary color-primary load-more my-5"
+        onclick="handleLoadMore()"
+      >
+        More results
+      </button>
+    </main>
   </body>
+
+  <!-- get users  -->
   <script>
-    async function getUsers() {
+    async function getUsers(count = "fromid=0", ln = "", isLoadMore = false) {
+      const loadMore = document.querySelector(".load-more");
       const usersTable = document.getElementById("users-table");
+      if (!isLoadMore) usersTable.innerHTML = "";
 
       try {
-        const req = await fetch("http://localhost:3030/api/users");
+        const req = await fetch(
+          "http://localhost:3030/api/users?" + count + `&${ln}`
+        );
         const res = await req.json();
 
-        console.log(res);
+        if (res.length === 2) {
+          loadMore.classList.remove("d-none");
+          loadMore.classList.add("d-block");
+          const currentCount = loadMore.dataset.results;
+          loadMore.dataset.results = `${Number(currentCount) + 2}`;
+        } else {
+          loadMore.classList.remove("d-block");
+          loadMore.classList.add("d-none");
+        }
 
         for (let user of res) {
           const wrapper = document.createElement("div");
 
           const card = `
          <div class="d-flex align-items-center justify-content-start p3 mx-0 mb-4 rounded-3 card">
-            <a href="/admin/user/${user.id}"><img src="/images/${
+            <a href="/admin/user.html?user=${user.id}"><img src="/images/${
             user.profile_picture
           }" alt="avatar" class="avatar d-block rounded-3 me-4 flex-nowrap" />
             </a>
             <h3 class="me-4 my-0 w-100">${user.first_name} ${user.last_name}, ${
             user.age
-          }</h3>    
-                
+          }</h3>
+
             <button onclick="check(${user.id}, ${user.checked_in})" id="${
             user.id
           }" class=" ${
@@ -47,12 +96,15 @@
           wrapper.innerHTML = card;
           usersTable.appendChild(wrapper);
         }
+
+        getCount();
       } catch (error) {
         console.log(error);
       }
     }
   </script>
 
+  <!-- check status -->
   <script>
     async function check(id, status) {
       const userId = document.getElementById(id);
@@ -80,6 +132,50 @@
       } catch (error) {
         console.error(error);
       }
+    }
+  </script>
+
+  <!-- get count -->
+  <script>
+    async function getCount() {
+      try {
+        const req = await fetch("http://localhost:3030/api/users/count");
+        const res = await req.json();
+
+        const count = document.querySelector("#count h1");
+        count.innerHTML = `<span>Total registrations:</span> <span>${res.count}</span>`;
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  </script>
+
+  <!-- search -->
+  <script>
+    function handleSearch() {
+      let search = document.getElementById("search");
+      search = search.value || "";
+      getUsers("", `ln=${search}`);
+    }
+  </script>
+
+  <!-- reset -->
+  <script>
+    function handleReset() {
+      document.getElementById("search").value = "";
+      getUsers();
+    }
+  </script>
+
+  <!-- load more -->
+  <script>
+    function handleLoadMore() {
+      let count = document.querySelector(".load-more");
+      let search = document.getElementById("search");
+      search = search?.value ? `ln=${search.value}` : "";
+      count = count ? count.dataset.results : "0";
+
+      getUsers(`fromid=${count}`, search, true);
     }
   </script>
 </html>
